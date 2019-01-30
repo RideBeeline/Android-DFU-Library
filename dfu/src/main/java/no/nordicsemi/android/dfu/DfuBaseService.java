@@ -775,6 +775,15 @@ public abstract class DfuBaseService extends IntentService implements DfuProgres
 						// about 600ms after establishing connection. Values 600 - 1600ms should be OK.
 					}
 
+					Boolean result;
+					try {
+						result = (Boolean) BluetoothGatt.class.getMethod("refresh").invoke(gatt);
+					} catch (Throwable e) {
+						result = false;
+					}
+
+					sendLogBroadcast(LOG_LEVEL_DEBUG, "Refresh succeeded: " + (result ? "succeed" : "failed"));
+
 					// Attempts to discover services after successful connection.
 					sendLogBroadcast(LOG_LEVEL_VERBOSE, "Discovering services...");
 					sendLogBroadcast(LOG_LEVEL_DEBUG, "gatt.discoverServices()");
